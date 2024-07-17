@@ -1,35 +1,32 @@
-import express  from "express";
-import mongoose from "mongoose";
-import  dotenv  from "dotenv";
-import cors from "cors";
-
-import bookRoute from "./route/book.route.js";
+import express from "express"
+import dotenv from "dotenv"
+import mongoose from "mongoose"
+import cors from "cors"
+import bookRoute from "./route/book.route.js"
+import userRoute from "./route/user.route.js"
 
 const app = express()
-app.use(cors());
-dotenv.config();
+app.use(cors())
+app.use(express.json());
+dotenv.config()
 
-const port = process.env.PORT||4000
+const port =process.env.PORT || 8000
 const URI=process.env.MONGODB_URI;
 
-//connect to mogodb
- ( async()=>{
-  try {
-  await  mongoose.connect(`${URI}/Bookstore`);
-  app.on("error",()=>{
-    console.log("Error:",error);
-    
-  })
-  console.log("connected to mongodb");
-  
-  } catch (error) {
-    console.error("Mongodb connection failed: ",error)
-  }
- })()
+//database connection(connect to mongodb)
+try {
+    mongoose.connect(URI)
+    console.log("Connected to mongoDB");
+} catch (error) {
+    console.log("Error: ",error);
+}
 
- //defining routes
- app.use("/book",bookRoute)
+//defining routes
+
+app.use('/book',bookRoute);
+app.use('/user',userRoute);
 
 app.listen(port, () => {
-  console.log(`server is listening on port ${port}`)
+  console.log(`Server is  listening on port ${port}`)
 })
+
